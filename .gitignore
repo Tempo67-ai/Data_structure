@@ -1,0 +1,21 @@
+# 可执行文件与编译产物
+*.exe
+*.o
+*.obj
+*.out
+
+# 压缩包与原始文档
+*.zip
+*.rar
+*.7z
+*.pdf
+
+# 编辑器 / 工具配置
+.vscode/
+.crossnote/
+.idea/
+
+# 系统文件
+Thumbs.db
+Desktop.ini
+.DS_Store
