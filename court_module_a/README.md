@@ -67,10 +67,12 @@ populateAgents(documents);
 
 在一次加载中，`docId` 从 0 开始按输入文件和文件内记录顺序连续编号，并与 `documents` 下标一致。展示或排序使用编号列表。跨月数据应一次传入，按顺序生成全局编号。`caseNo` 的全角括号和常见空白在 A1 中统一，`judgeDate` 沿用源文件中的日期值。空 `features` 表示源文书缺少案情特征，空 `agents` 表示 A2 没识别到足够明确的配对。
 
-## GitHub 交接建议
+## 组内交接
 
-以一个独立目录提交，避免覆盖仓库已有的入口或构建文件。PR 可以取名「[A] 文书 CSV 读取与律师律所提取」。把下面内容放在 PR 描述里：
+A1 文书读取和 A2 律师、律所提取已经提交到 [PR #1](https://github.com/Tempo67-ai/Data_structure/pull/1)。我用 12 个月的真实 CSV 跑过，共读到 40,900 份文书。从 GitHub 重新拉取分支后，联调样例也通过了。
 
-> A1 提供 `loadDocuments`，保留同案号下的多份文书，并给每份文书连续编号。A2 提供 `populateAgents`，在文书中填入律师与律所的配对。进入 `court_module_a` 后运行 `make check` 验证样例。已用项目 12 个月数据验证，共读到 40,900 份文书。请 E 确认公共字段和启动调用，请 B2 核对 `agents` 的使用方式。真实数据沿用组内约定的数据路径。
+- **E**：麻烦先看一下 `CaseDocument.h` 的字段和项目入口能不能接上。入口先调用 `loadDocuments(csvPaths)`，再调用 `populateAgents(documents)`。
+- **B1、C、D2**：可以先用 `loadDocuments` 返回的文书列表联调。`docId` 对应一份文书，同一个 `caseNo` 可能对应多份文书。
+- **B2**：麻烦看一下 `agents` 里的姓名和律所配对是否够用。`agents` 为空表示当前规则没有提取到明确配对。**D1** 可以等 B2 的索引接好后再联调。
 
-首次对接可以让 B1、C、D2 先调用 `loadDocuments`，再由 E 调用 `populateAgents` 后交给 B2。样例 CSV 由虚构记录组成，适合放在仓库里给全组复用。
+大家可以先用 `examples/sample.csv`，在仓库根目录运行 `make -C court_module_a check` 验证。接真实数据时用组内约定的路径即可。如果有字段或接口需要调整，直接在 PR 里留言，我来跟进。确认接入方式后，我们再合并到 `main`。
